@@ -6,7 +6,6 @@
 #include <pwd.h>
 #include <grp.h>
 #include <time.h>
-
 #include <stdlib.h>
 
 #define DARK_BLUE \033[94m
@@ -49,8 +48,6 @@ void lsL(char *fileName, char *pathToFile, char *permText) {
 	char strTime[20];
 	strftime(strTime, sizeof(strTime), "%b %d %H:%M", localtime(&fs.st_ctime));
 
-	//printf("Total Second: %i\n", fs.st_blocks);
-
 	if (permText[0] == 'd')
 		printf("%s %2i %s %s %5i %s \033[94m%s\033[0m\n", permText, fs.st_nlink,
 				getpwuid(fs.st_uid)->pw_name, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName);
@@ -76,9 +73,6 @@ int countTotal(DIR* d, char *path, int a_flag) {
 		struct stat fs;
 		stat(pathToFile, &fs);
 		total += fs.st_blocks;
-		
-		//printf("Total First: %i\n %s\n", fs.st_blocks, dir->d_name);
-
 		free(pathToFile);
 	}
 	return total/2; // convert bytes(512) in kbytes
