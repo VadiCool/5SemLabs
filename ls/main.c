@@ -6,6 +6,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <time.h>
+
 #include <stdlib.h>
 
 #define DARK_BLUE \033[94m
@@ -49,14 +50,14 @@ void lsL(char *fileName, char *pathToFile, char *permText) {
 	strftime(strTime, sizeof(strTime), "%b %d %H:%M", localtime(&fs.st_ctime));
 
 	if (permText[0] == 'd')
-		printf("%s %2i %s %s %5i %s \033[94m%s\033[0m\n", permText, fs.st_nlink,
+		printf("%s %2li %s %s %5li %s \033[94m%s\033[0m\n", permText, fs.st_nlink,
 				getpwuid(fs.st_uid)->pw_name, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName);
 	else if (permText[3] == 'x' || permText[6] == 'x' || permText[9] == 'x')
-		printf("%s %2i %s %s %5i %s \033[92m%s\033[0m\n", permText, fs.st_nlink,
+		printf("%s %2li %s %s %5li %s \033[92m%s\033[0m\n", permText, fs.st_nlink,
 				getpwuid(fs.st_uid)->pw_name, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName);
-	else if (permText[0] == 'l') printf("%s %2i %s %s %5i %s \033[96m%s\033[0m\n", permText, fs.st_nlink,
+	else if (permText[0] == 'l') printf("%s %2li %s %s %5li %s \033[96m%s\033[0m\n", permText, fs.st_nlink,
 				getpwuid(fs.st_uid)->pw_name, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName);
-	else printf("%s %2i %s %s %5i %s %s\n", permText, fs.st_nlink,
+	else printf("%s %2li %s %s %5li %s %s\n", permText, fs.st_nlink,
 				getpwuid(fs.st_uid)->pw_name, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName);
 }
 
@@ -73,6 +74,9 @@ int countTotal(DIR* d, char *path, int a_flag) {
 		struct stat fs;
 		stat(pathToFile, &fs);
 		total += fs.st_blocks;
+		
+		//printf("Total First: %i\n %s\n", fs.st_blocks, dir->d_name);
+
 		free(pathToFile);
 	}
 	return total/2; // convert bytes(512) in kbytes
