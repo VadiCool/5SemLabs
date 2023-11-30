@@ -49,17 +49,49 @@ void lsL(char *fileName, char *pathToFile, char *permText) {
 	char strTime[20];
 	strftime(strTime, sizeof(strTime), "%b %d %H:%M", localtime(&fs.st_ctime));
 
-	if (permText[0] == 'd')
+	
+	
+	if (permText[0] == 'd' && getpwuid(fs.st_uid)) // str
 		printf("%s %2li %s %s %5li %s \033[94m%s\033[0m\n", permText, fs.st_nlink,
 			getpwuid(fs.st_uid)->pw_name, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName);
-	else if (permText[0] == 'l') 
-		printf("%s %2li %s %s %5li %s \033[96m%s\033[0m\n", permText, fs.st_nlink,
-			getpwuid(fs.st_uid)->pw_name, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName);
-	else if (permText[3] == 'x' || permText[6] == 'x' || permText[9] == 'x')
+	else if (permText[0] == 'd' ) // int 
+		printf("%s %2li %i %s %5li %s \033[94m%s\033[0m\n", permText, fs.st_nlink,
+			fs.st_uid, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName);
+			
+	else if (permText[0] == 'l' && getpwuid(fs.st_uid)) { // str
+		char *linkNameFile = (char*)malloc(100);
+		readlink(pathToFile, linkNameFile, 100);
+
+		//struct stat fs2;
+		//stat(pathToFile, &fs2);
+
+		if (S_ISDIR(fs.st_mode))
+			printf("%s %2li %s %s %5li %s \033[96m%s\033[0m -> \033[94m%s\033[0m\n", permText, fs.st_nlink,
+				getpwuid(fs.st_uid)->pw_name, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName, linkNameFile);
+		else if ((fs.st_mode & S_IXUSR) || (fs.st_mode & S_IXGRP) || (fs.st_mode & S_IXOTH)) 
+			printf("%s %2li %s %s %5li %s \033[96m%s\033[0m -> \033[92m%s\033[0m\n", permText, fs.st_nlink,
+				getpwuid(fs.st_uid)->pw_name, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName, linkNameFile);
+		else printf("%s %2li %s %s %5li %s \033[96m%s\033[0m -> %s\n", permText, fs.st_nlink,
+				getpwuid(fs.st_uid)->pw_name, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName, linkNameFile);
+	}
+	else if (permText[0] == 'l')  {// int
+		char *linkNameFile = (char*)malloc(100);
+		readlink(pathToFile, linkNameFile, 100);
+		printf("%s %2li %i %s %5li %s \033[96m%s\033[0m -> %s\n", permText, fs.st_nlink,
+			fs.st_uid, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName, linkNameFile);
+	}
+			
+	else if ((permText[3] == 'x' || permText[6] == 'x' || permText[9] == 'x') && getpwuid(fs.st_uid)) // str
 		printf("%s %2li %s %s %5li %s \033[92m%s\033[0m\n", permText, fs.st_nlink,
 			getpwuid(fs.st_uid)->pw_name, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName);
-	else printf("%s %2li %s %s %5li %s %s\n", permText, fs.st_nlink,
+	else if (permText[3] == 'x' || permText[6] == 'x' || permText[9] == 'x') // int
+		printf("%s %2li %i %s %5li %s \033[92m%s\033[0m\n", permText, fs.st_nlink,
+			fs.st_uid, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName);
+			
+	else if (getpwuid(fs.st_uid)) printf("%s %2li %s %s %5li %s %s\n", permText, fs.st_nlink, // str
 			getpwuid(fs.st_uid)->pw_name, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName);
+	else printf("%s %2li %i %s %5li %s %s\n", permText, fs.st_nlink, //int
+			fs.st_uid, getgrgid(fs.st_gid)->gr_name, fs.st_size, strTime, fileName);
 }
 
 int countTotal(DIR* d, char *path, int a_flag) {
@@ -167,7 +199,7 @@ int main(int argc, char** argv) {
 			else if (permText[0] == 'l')
 				printf("\033[96m%s\033[0m  ", dir->d_name);
 			else if (permText[3] == 'x' || permText[6] == 'x' || permText[9] == 'x') 
-				printf("\033[94m%s\033[0m  ", dir->d_name);
+				printf("\033[92m%s\033[0m  ", dir->d_name);
 			else printf("%s  ", dir->d_name);
 
 			free(pathToFile);
