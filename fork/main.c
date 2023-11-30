@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <sys/wait.h>
 
 void myExit() {
 	printf("Normal exit of function\n");
@@ -33,10 +34,11 @@ int main() {
 		exit(-1);
 	}
 	else if (pid == 0) {
+		sleep(3);
 		printf("Child process id: %i\n", getpid());
 	}
 	else if (pid > 0) {
-		sleep(5);
+		wait(NULL);
 		printf("Parant process id: %i\n", getpid());
 	}
 	
@@ -44,6 +46,3 @@ int main() {
 
 	return 0;
 }
-
-
-
