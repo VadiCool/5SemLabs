@@ -105,7 +105,7 @@ int countTotal(DIR* d, char *path, int a_flag) {
 		strcat(pathToFile, dir->d_name);
 
 		struct stat fs;
-		stat(pathToFile, &fs);
+		lstat(pathToFile, &fs);
 		total += fs.st_blocks;
 		
 		//printf("Total First: %i\n %s\n", fs.st_blocks, dir->d_name);
