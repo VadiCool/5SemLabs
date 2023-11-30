@@ -135,7 +135,8 @@ int main(int argc, char **argv) {
 	else if (argc >= 2) {
 		FILE *fp = fopen(argv[optind], "r");
 		if (!fp) {
-			printf("Can't open file");
+			printf("Can't open file\n");
+			exit(1);
 		}
 		if (n && !b && !E) {
 			readAndPrint(fp, "n");
