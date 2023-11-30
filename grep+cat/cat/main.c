@@ -100,6 +100,7 @@ void readAndPrint(FILE *stream, char *flags) {
 		}
 		return;
 	}
+	
 }
 
 int main(int argc, char **argv) {
@@ -151,6 +152,13 @@ int main(int argc, char **argv) {
  		else if (b && E) {
 			readAndPrint(fp, "bE");
 		}
+		else if (!n && !b && !E) {
+			size_t size = 0;
+			char *buf;
+			while (getline(&buf, &size, fp) != -1)
+		       	printf("%s", buf);	
+		}
+
 	}
 
 	return 0;
