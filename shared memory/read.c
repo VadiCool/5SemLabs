@@ -3,7 +3,8 @@
 #include <string.h>
 #include <sys/shm.h>
 #include <sys/ipc.h>
-
+#include <time.h>
+#include <unistd.h>
 int main() {
 	
 	//key_t key = ftok("file.txt", 1);
@@ -28,7 +29,12 @@ int main() {
 		return 1;
 	}
 
-	printf("%s\n", ptr);	
+	printf("Write:\n%s\n", ptr);	
+
+	time_t mytime = time(NULL);
+	char *curTime = ctime(&mytime);
+
+	printf("Read:\nTime: %sPid: %i\n", curTime, getpid());
 
 	if (-1 == shmdt(ptr)) {
 		printf("Shmdt error\n");
