@@ -7,8 +7,8 @@
 #include <unistd.h>
 int main() {
 	
-	//key_t key = ftok("file.txt", 1);
-	key_t key = 100;
+	key_t key = ftok("file.txt", 1);
+	//key_t key = 100;
 
 	if (-1 == key) {
 		printf("Ftok error\n");

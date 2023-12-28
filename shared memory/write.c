@@ -10,14 +10,17 @@
 
 
 int id = 0;
+char *ptr;
 
 void handler_sigint(int sig) {
+	shmdt(ptr);
 	shmctl(id, IPC_RMID, NULL);
 	printf("Handled\n");
 	exit(0);
 }
 
 void handle_sigterm(int sig) {
+	shmdt(ptr);
 	shmctl(id, IPC_RMID, NULL);
 	printf("Handled\n");
 	exit(0);
@@ -38,9 +41,9 @@ int main() {
 	}
 	
 
-	//key_t key = ftok("file.txt", 1);
+	key_t key = ftok("file.txt", 1);
 	
-	key_t key = 100;
+	//key_t key = 100;
 	if (-1 == key) {
 		printf("Key error\n");
 		return 1;
@@ -58,7 +61,7 @@ int main() {
 			return 1;
 		}
 	}
-	char *ptr = shmat(id, NULL, 0);
+	ptr = shmat(id, NULL, 0);
 
 	printf("Data attached successfully\n");
 
