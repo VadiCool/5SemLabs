@@ -23,11 +23,11 @@ int main() {
 	}
 	if (id != 0) {
 
-		char str[100];
+		char str[100] = "";
 		strcat(str, "Hello word!\n");
 		strcat(str, "id: ");
 
-		char strId[10];
+		char strId[10] = "";
 		sprintf(strId, "%i", id);
 
 		strcat(str, strId);
@@ -47,7 +47,6 @@ int main() {
 
 		write(fd, str, 100);
 		close(fd);
-
 
 	}
 	else {

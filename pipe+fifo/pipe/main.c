@@ -14,18 +14,17 @@ int main() {
 
 	int id = fork();
 	if (id == -1) {
-		printf("Fork errror\n");
+		printf("Fork error\n");
 		return -1;
 	}
 	if (id != 0) {
 		close(fd[0]);
 
-		//char str[] = "Hello word!\n";
-		char *str = malloc(100);
+		char str[100] = "";
 		strcat(str, "Hello word!\n");
 		strcat(str, "id: ");
 
-		char strId[10];
+		char strId[10] = "";
 		sprintf(strId, "%i", id);
 
 		strcat(str, strId);
@@ -39,9 +38,10 @@ int main() {
 
 		write(fd[1], str, 100);
 		close(fd[1]);
+
 	} else {
 		close(fd[1]);
-		char str[100];
+		char str[100] = "";
 		read(fd[0], str, 100);
 		close(fd[0]);
 		printf("%s", str);
